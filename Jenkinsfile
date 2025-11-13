@@ -1,9 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'python:3.10' // готовый образ с Python
-        }
-    }
+    agent any
 
     stages {
         stage('Checkout') {
@@ -12,20 +8,17 @@ pipeline {
             }
         }
 
-        stage('Install dependencies') {
+        stage('Install Python') {
             steps {
-                sh 'python -m venv venv'
-                sh '. venv/bin/activate && pip install --upgrade pip'
-                sh '. venv/bin/activate && pip install pytest'
+                sh 'python3 -m venv venv || python -m venv venv'
+                sh '. venv/bin/activate && pip install -r requirements.txt'
             }
         }
 
         stage('Run Tests') {
             steps {
-                sh '. venv/bin/activate && pytest || true'
+                sh '. venv/bin/activate && pytest'
             }
         }
     }
 }
-
-
