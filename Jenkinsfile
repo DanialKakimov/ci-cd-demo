@@ -1,5 +1,9 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'python:3.12'  // контейнер с Python 3.12
+        }
+    }
 
     stages {
         stage('Checkout') {
@@ -10,7 +14,7 @@ pipeline {
 
         stage('Install Python') {
             steps {
-                sh 'python3 -m venv venv'
+                sh 'python -m venv venv'
                 sh './venv/bin/pip install --upgrade pip'
                 sh './venv/bin/pip install -r requirements.txt'
             }
