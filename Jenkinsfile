@@ -1,14 +1,10 @@
 pipeline {
-    agent {
-        docker {
-            image 'python:3.12'  // контейнер с Python 3.12
-        }
-    }
+    agent any
 
     stages {
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/DanialKakimov/ci-cd-demo.git', branch: 'master'
+                git 'https://github.com/DanialKakimov/ci-cd-demo.git'
             }
         }
 
@@ -26,4 +22,6 @@ pipeline {
             }
         }
     }
+}
+
 }
