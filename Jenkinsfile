@@ -1,15 +1,19 @@
 pipeline {
-    agent {
-        docker {
-            image 'python:3.10'
-            args '-u'
-        }
-    }
+    agent any
     stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Install Python') {
+            steps {
+                sh 'python3 -m venv venv || python -m venv venv'
+                sh './venv/bin/pip install -r requirements.txt'
+            }
+        }
         stage('Run Tests') {
             steps {
-                sh 'python -m venv venv'
-                sh './venv/bin/pip install -r requirements.txt'
                 sh './venv/bin/python -m unittest discover'
             }
         }
