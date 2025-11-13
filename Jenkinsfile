@@ -1,23 +1,16 @@
 pipeline {
-    agent any
-
+    agent {
+        docker {
+            image 'python:3.10'
+            args '-u'
+        }
+    }
     stages {
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/DanialKakimov/ci-cd-demo.git'
-            }
-        }
-
-        stage('Install Python') {
-            steps {
-                sh 'python3 -m venv venv || python -m venv venv'
-                sh '. venv/bin/activate && pip install -r requirements.txt'
-            }
-        }
-
         stage('Run Tests') {
             steps {
-                sh '. venv/bin/activate && pytest'
+                sh 'python -m venv venv'
+                sh './venv/bin/pip install -r requirements.txt'
+                sh './venv/bin/python -m unittest discover'
             }
         }
     }
