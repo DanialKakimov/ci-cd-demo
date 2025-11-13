@@ -1,17 +1,26 @@
 pipeline {
     agent any
+
     stages {
-        stage('Run Python') {
+        stage('Checkout') {
             steps {
-                script {
-                    docker.image('python:3.12').inside {
-                        sh 'python -m venv venv'
-                        sh 'venv/bin/pip install -r requirements.txt'
-                        sh 'venv/bin/python -m unittest discover'
-                    }
-                }
+                git url: 'https://github.com/DanialKakimov/ci-cd-demo.git', branch: 'master'
+            }
+        }
+
+        stage('Setup Python') {
+            steps {
+                // Создаем виртуальное окружение
+                sh 'python3 -m venv venv || python -m venv venv'
+                sh './venv/bin/pip install --upgrade pip'
+                sh './venv/bin/pip install -r requirements.txt'
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh './venv/bin/python -m unittest discover -s tests'
             }
         }
     }
 }
-
